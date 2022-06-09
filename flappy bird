@@ -1,0 +1,229 @@
+//Vers�o beta desenvolvida por Thiago Felski Pereira para disciplina de Algoritmos
+#include <iostream>
+#include <windows.h>
+#include <time.h>
+#include <conio.h> ///para o getch()
+///https://stackoverflow.com/questions/34474627/linux-equivalent-for-conio-h-getch
+
+using namespace std;
+
+
+/**
+    F L A P B I R D (M2 Algoritmos)
+    - Lembrando: n�o permitido o uso de fun��es e vari�veis compostas como structs, vetores e matrizes
+    - Corrigir os rastros (p�ssaro e obst�culos)
+    - Implementar colis�o
+    - Implementar pontua��o (mais um ponto para cada obst�culo superado)
+    - Fazer 2 obst�culos simult�neos (obstaculo1 e obstaculo2)
+    - Deixar a pontua��o vis�vel durante todo o jogo
+    - Definir marcos para acelerar a velocidade
+*/
+
+
+
+int main()
+{
+    ///ALERTA: N�O MODIFICAR O TRECHO DE C�DIGO, A SEGUIR.
+    //INICIO: COMANDOS PARA QUE O CURSOR N�O FIQUE PISCANDO NA TELA
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO     cursorInfo;
+    GetConsoleCursorInfo(out, &cursorInfo);
+    cursorInfo.bVisible = false; // set the cursor visibility
+    SetConsoleCursorInfo(out, &cursorInfo);
+    //FIM: COMANDOS PARA QUE O CURSOR N�O FIQUE PISCANDO NA TELA
+    //IN�CIO: COMANDOS PARA REPOSICIONAR O CURSOR NO IN�CIO DA TELA
+    COORD coord;
+    //FIM: COMANDOS PARA REPOSICIONAR O CURSOR NO IN�CIO DA TELA
+    ///ALERTA: N�O MODIFICAR O TRECHO DE C�DIGO, ACIMA.
+
+    int bird_x=5, bird_y=10, bird_yant;
+    int obstaculo_x=110, obstaculo2_x=obstaculo_x + 35, obstaculo_xant, obstaculo2_xant;
+    int obstaculo_y, obstaculo2_y;
+    int tecla, pont=0;
+    int speed=200;
+    int score_x=1, score_y=21;
+    ///NUMERO ALEATORIO
+
+    srand(time(NULL));
+
+    int numAle, numAle2;
+
+    ///DESENHO DO CEN�RIO
+    cout<<"-----------------------------------------------------------------------------------------------------";
+    cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+    cout<<"-----------------------------------------------------------------------------------------------------\n";
+
+    numAle=rand() % 15 + 4;
+    numAle2=rand() % 15 + 4;
+
+    while (true) { //esse la�o faz o jogo rodar para sempre
+
+
+
+
+        ///APAGA O RASTRO DO PASSARO
+        coord.X = bird_x;
+        coord.Y = bird_yant;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        cout<<" ";
+
+        ///POSICIONA O P�SSARO
+        coord.X = bird_x;    coord.Y = bird_y;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        cout<<char(190);
+
+        ///POSICIONA OS PONTOS
+
+        coord.X = score_x;
+        coord.Y = score_y;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        cout << "Score: " << pont;
+
+
+        ///POSICIONA OS OBST�CULOS
+
+        obstaculo_y=1;
+        obstaculo2_y=1;
+        while(obstaculo_y < 20 and obstaculo2_y < 20){
+
+            ///APAGA O RASTRO DO OBSTACULO 1
+
+            coord.X = obstaculo_xant; //Muda o valor de coord.X pro antigo obstaculo_x
+            coord.Y = obstaculo_y;
+            SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+            cout<<" ";
+
+            ///APAGA O RASTRO DO OBSTACULO 2
+
+            coord.X = obstaculo2_xant; //Muda o valor de coord.X pro antigo obstaculo2_x
+            coord.Y = obstaculo2_y;
+            SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+            cout<<" ";
+
+            ///POSICIONAMENTO DO OBSTACULO 1
+
+            coord.X = obstaculo_x;
+            coord.Y = obstaculo_y;
+            SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+            if(obstaculo_y < numAle - 1 or obstaculo_y > numAle + 1){
+                cout<<char(219);
+            }else{
+                cout<<" ";
+            }
+
+            obstaculo_y++;
+
+            ///POSICIONAMENTO DO OBSTACULO 2
+
+            if(obstaculo2_x < 110) {
+                coord.X = obstaculo2_x;
+                coord.Y = obstaculo2_y;
+                SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+                if(obstaculo2_y < numAle2 - 1 or obstaculo2_y > numAle2 + 1){
+                cout<<char(219);
+                }else{
+                cout<<" ";
+                }
+            }
+            obstaculo2_y++;
+
+        }
+
+        ///VERIFICA COLIS�O COM O TETO E O CH�O
+
+        if (bird_y == 0 or bird_y == 20){
+            system("cls");
+
+            cout<<"-----------------------------------------------------------------------------------------------------";
+            cout<<"\n\n\n\n\n\n\n\n\n";
+            cout<<"                                                  GAME\n";
+            cout<<"                                                  OVER\n";
+            cout<<"                                                Score: "<<pont;
+            cout<<"\n\n\n\n\n\n\n\n\n";
+            cout<<"-----------------------------------------------------------------------------------------------------\n";
+
+            system("pause");
+
+            ///COLISAO COM OS OBSTACULOS
+
+        }else if(bird_x == obstaculo_x and (bird_y < numAle -1 or bird_y > numAle +1 )){ //OBSTACULO 1
+            system("cls");
+
+            cout<<"-----------------------------------------------------------------------------------------------------";
+            cout<<"\n\n\n\n\n\n\n\n\n";
+            cout<<"                                                  GAME\n";
+            cout<<"                                                  OVER\n";
+            cout<<"                                                Score: "<<pont;
+            cout<<"\n\n\n\n\n\n\n\n\n";
+            cout<<"-----------------------------------------------------------------------------------------------------\n";
+
+            system("pause");
+
+        }else if(bird_x == obstaculo2_x and (bird_y < numAle2 -1 or  bird_y > numAle2 + 1)){ //OBSTACULO 2
+            system("cls");
+
+            cout<<"-----------------------------------------------------------------------------------------------------";
+            cout<<"\n\n\n\n\n\n\n\n\n";
+            cout<<"                                                  GAME\n";
+            cout<<"                                                  OVER\n";
+            cout<<"                                                Score: "<<pont;
+            cout<<"\n\n\n\n\n\n\n\n\n";
+            cout<<"-----------------------------------------------------------------------------------------------------\n";
+
+            system("pause");
+
+        }else{
+
+            ///VERIFICA COMANDO DO JOGADOR
+            if (kbhit()) { //verifica se uma tecla foi pressionada
+            tecla=getch(); //verifica comando do jogador
+            }
+            bird_yant=bird_y; //AQUI ARMAZENA O ANTIGO VALOR DE Y (APAGAR RASTRO)
+            if ( tecla=='w' ){
+                bird_y--;
+                tecla='0';
+            } else {
+                bird_y++;
+            }
+            ///P�SSARO CAI 1 POSI��O SE N�O FOI PRESSIONADO PARA SUBIR
+
+            ///GUARDANDO VARIAVEIS
+
+            obstaculo_xant = obstaculo_x; //Armazena obstaculo_x em obstaculo_xant;
+            obstaculo2_xant = obstaculo2_x; //Armazena obstaculo2_x em obstaculo2_xant;
+
+            ///OBST�CULO AVAN�A UMA POSI��O PARA ESQUERDA
+
+            obstaculo_x--;
+            obstaculo2_x--;
+        }
+
+        ///RECOME�A OS OBSTACULOS
+
+        if(obstaculo_x < 0) {
+            obstaculo_x = 110;
+            numAle=rand() % 15 + 4;
+        } else if(obstaculo2_x < 0) {
+            obstaculo2_x = 145;
+            numAle2=rand() % 15 + 4;
+        }
+        if(speed > 100){ //DEFINE UMA VELOCIDADE MAXIMA
+        Sleep(speed);
+        }else{
+        Sleep(100);
+        }
+        ///CONTAGEM DE PONTOS
+
+        if(bird_x == obstaculo_x +1 or bird_x == obstaculo2_x + 1){
+            pont++;
+
+            if(pont != 0 and pont % 5 ==0){
+                speed = speed-30;
+            }
+        }
+
+    }
+
+    return 0;
+}
+//C�digo feito pelos alunos: Matheus Armando Timm Barbi�ri, Cleiton Prange, Amandy da Silva, Bianca Camila Correa
